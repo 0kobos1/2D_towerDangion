@@ -3,24 +3,28 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Windows;
+using UnityEngine.Events;
 
 public enum Enemystate
 {
     Idle,
     Walk,
-    Battle,
 }
 
 public class EnemyController : MonoBehaviour
 {
+    
+
     [SerializeField] Dialog dialog;
     [SerializeField] List<Vector2> movePatten;
 
     Character character;
     Enemystate state;
-
+    
     float idleTimer;
     int currentMovePattern;
+
+    public UnityAction onBattleStart; // バトル開始時に呼び出される
 
     private void Awake()
     {
@@ -31,12 +35,18 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
+        // Battleステート時はUpdateしない(全Enemyが止まる）
+        if(GameController.Instance.GameState == GameState.Battle)
+        {
+            return;
+        }
+
         character.HandleUpdate();
 
         // ランダムな時間間隔を取得する
-        float timeBetweenPattern = Random.Range(1, 3);
+        float timeBetweenPattern = Random.Range(1f, 3f);
 
-        // timeBetweenPatternの間隔でステートを"Walk"に変更する
+        // Idelステートの場合、
         if (state == Enemystate.Idle)
         {
             // idleTimerを更新
@@ -48,6 +58,9 @@ public class EnemyController : MonoBehaviour
                 // idleTimerを初期化し
                 idleTimer = 0f;
 
+                // ステートをWalkに変え
+                state= Enemystate.Walk;
+
                 // RandomWalkのコルーチンを開始
                 StartCoroutine(RandomWalk());
             }
@@ -57,66 +70,62 @@ public class EnemyController : MonoBehaviour
     // 自動ランダム歩行
     IEnumerator RandomWalk()
     {
-        // ランダムな目的地を取得する
+        // -1, 0, 1のランダムな目的地を取得する
         Vector2 randomMovePos;
         ;
         randomMovePos.x = Random.Range(-1, 2);
         randomMovePos.y = Random.Range(-1, 2);
 
-        // もし位置に変化がなければ、
+        // 移動距離がゼロなら
         if(randomMovePos == Vector2.zero)
         {
-            // Idleステートに遷移して
-            state = Enemystate.Idle;
-        }
-
-        // 位置に変化があれば
-        else
-        {
-            // 斜め方向に移動しないようにする
-            if (randomMovePos.x != 0)
-            {
-                randomMovePos.y = 0;
-            }
-
-            // Playerとの接触判定があれば
-            if (TouchedPlayer(randomMovePos) != null)
-            {
-                // touchedPlayerに接触判定があったPlayerのゲームオブジェクトを格納
-                GameObject touchedPlayer = TouchedPlayer(randomMovePos).gameObject;
-
-                // 敵の状態をBattleに変更
-                state = Enemystate.Battle;
-
-                // 戦闘システムを立ち上げる
-                BattleSystem.Instance.HandleStart(touchedPlayer, this.gameObject);
-            }
-
-            // 現在のステートをWalkに変更
-            state = Enemystate.Walk;
-
-            // 歩行する
-            yield return character.Move(randomMovePos);
-
-            // 次の移動パターンを設定する
-            currentMovePattern = (currentMovePattern + 1) % movePatten.Count;
+            // idleTimerを初期化
+            idleTimer = 0f;
 
             // Idleステートに遷移
             state = Enemystate.Idle;
-        }      
+
+            // 移動コルーチンを抜ける
+            yield break;
+        }
+
+        // 移動座標がゼロでないなら    
+        // 斜め方向に移動しないようにする
+        if (randomMovePos.x != 0)
+        {
+            randomMovePos.y = 0;
+        }
+
+        // Playerとの接触判定があれば
+        if (TouchedPlayer(randomMovePos) != null)
+        {
+            // touchedPlayerに接触判定があったPlayerのゲームオブジェクトを格納
+            GameObject touchedPlayer = TouchedPlayer(randomMovePos).gameObject;
+
+            // Battleステートに遷移
+            GameController.Instance.SetCurrentState(GameState.Battle);
+
+            // 自分の情報をBattleSystemにおくる
+            BattleSystem.Instance.GetBattleStatus(touchedPlayer.GetComponent<BattleStatus>(), this.GetComponent<BattleStatus>());
+
+            // 歩行コルーチンを終了する
+            yield break;
+        }
+
+        // 歩行する
+        yield return character.Move(randomMovePos);
+
+        // 次の移動パターンを設定する
+        currentMovePattern = (currentMovePattern + 1) % movePatten.Count;
+
+        // idleTimerを初期化
+        idleTimer = 0f;
+
+        // Idleステートに遷移
+        state = Enemystate.Idle;    
     }
 
-    bool IsTouchedPlayer(Vector2 moveVec)
-    {
-        //移動先の座標をtargetPosに格納
-        Vector2 targetPos;
-        targetPos = (Vector2)transform.position + moveVec;
-
-        // 移動先にレイを飛ばし、EnemyLayerとの接触判定を調べる
-        return Physics2D.OverlapCircle(targetPos, 0.2f, GameLayers.Instance.PlayerLayer);
-    }
-
-
+    // プレイヤーとの接触を調べる
     Collider2D TouchedPlayer(Vector2 moveVec)
     {
         Vector2 targetPos;

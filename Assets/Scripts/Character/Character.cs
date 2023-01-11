@@ -12,11 +12,13 @@ public class Character : MonoBehaviour
     public bool IsMoving { get; set; } // 移動中かどうか
 
     public CharacterAnimator CharacterAnimator { get => characterAnimator; }
-
+    Vector2 oldPos; // 移動前の位置
 
     private void Awake()
     {
         characterAnimator = GetComponent<CharacterAnimator>();
+        BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
+        boxCollider2D.isTrigger = true; // OnTrigerEnter2Dを参照するために
     }
 
     public void HandleUpdate()
@@ -38,6 +40,15 @@ public class Character : MonoBehaviour
         Vector3 targetPos = transform.position;
         targetPos += moveVec;
 
+        // 目的地がすでに統括リストに登録されていれば、
+        if (GameController.Instance.MoveTargetList.Contains(targetPos))
+        {
+            // Move関数を抜ける
+            yield break;
+        }
+        // 統括リストに目的地を加える
+        GameController.Instance.MoveTargetList.Add(targetPos);
+        
         // 移動先に障害物があれば関数を抜ける
         if (!IsPathClear(targetPos))
         {
@@ -51,11 +62,17 @@ public class Character : MonoBehaviour
         while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+
+            // オブジェクトとの接触を確認
+
             yield return null;
         }
 
         // 十分に近づいたら位置をtargetPosに移動させる
         transform.position = targetPos;
+
+        // 統括リストから目的地を抜く
+        GameController.Instance.MoveTargetList.Remove(targetPos);
 
         // 移動終了
         IsMoving = false;
@@ -92,4 +109,15 @@ public class Character : MonoBehaviour
         }
         
     }
+
+    // AとBが目的地に移
+
+    //// character同士が接触すると呼び出される
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    Debug.Log("Hit");
+
+    //    // 接触した場合、移動前の位置に固定する
+    //    transform.position = oldPos;
+    //}
 }

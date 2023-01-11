@@ -12,7 +12,6 @@ public class TalkDialogManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI talkDialogText;
     [SerializeField] float letterPerSecond;
 
-    public UnityAction OnShowDialog;
     public UnityAction OnCloseDialog;
     public UnityAction OnDialogFinished;
 
@@ -38,7 +37,7 @@ public class TalkDialogManager : MonoBehaviour
         OnDialogFinished = onDialogFinished;
 
         // OnShowDialogを実行（NPCのステートを"Dialog"に遷移）
-        OnShowDialog?.Invoke();
+        GameController.Instance.SetCurrentState(GameState.Dialog);
         
         // このスクリプトのdialog変数に引数のdialogを設定
         this.dialog = dialog;
@@ -85,7 +84,7 @@ public class TalkDialogManager : MonoBehaviour
                 IsShowing = false;
 
                 // "OnCloseDialog"を実行（ステートをFreeRoamに戻す）
-                OnCloseDialog?.Invoke();
+                GameController.Instance.SetCurrentState(GameState.FreeRoam);
             }
             
         }

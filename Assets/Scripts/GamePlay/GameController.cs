@@ -1,8 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
-// ゲームの遷移状態
+
+// 修正
+// クラス図の作成
+// 敵と自分が重なって表示されるバグをなおす（敵キャラ）
+// NPCのランダム移動（指定した範囲内で）
+// ステータス表示用のUIを考える
+// 戦闘と戦闘の間にインターバルの時間を作る
+// 〇デバッグ用のダイアログを常に表示できるようにする
 public enum GameState
 {
     FreeRoam,
@@ -10,55 +18,58 @@ public enum GameState
     Battle,
 }
 
+// ゲームの遷移状態
 public class GameController : MonoBehaviour
 {
     [SerializeField] PlayerController playerController;
+    [SerializeField] int stageDifficulty; // ステージ難易度:敵のLevel設定に使用
+    [SerializeField] float battleSpeed; // 戦闘速度:戦闘コルーチンのWait時間に使用
 
-    GameState gameState = GameState.FreeRoam;
+    public static GameController Instance { get; private set; }
+    public int StageDifficulty { get => stageDifficulty; }
+    public float BattleSpeed { get => battleSpeed; }
 
-    private void Start()
+    GameState gameState;
+    public GameState GameState { get => gameState; }
+    public List<Vector2> MoveTargetList { get; set; } // 全ての移動物の目的地を管理する
+
+
+
+    // インスタンス化とgameStateの初期化
+    private void Awake()
     {
-        // UnityActionに登録をおこなう
-        TalkDialogManager.Instance.OnShowDialog += ShowDialog;
-        TalkDialogManager.Instance.OnCloseDialog += CloseDialog;
-        BattleSystem.Instance.OnBattleStart += StartBattle;
-
+        Instance = this;
+        gameState = GameState.FreeRoam;
+        MoveTargetList = new List<Vector2>();
     }
 
-    void ShowDialog()
+    // 現在のステートを設定
+    public void SetCurrentState(GameState state)
     {
-        gameState = GameState.Dialog;
-    }
-
-    void CloseDialog()
-    {
-        if(gameState == GameState.Dialog) 
-        {
-            gameState = GameState.FreeRoam;
-        }
-    }
-
-    void StartBattle()
-    {
-        gameState = GameState.Battle;
+        gameState = state;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(gameState == GameState.FreeRoam)
+        if (gameState == GameState.FreeRoam)
         {
+            // playerControllerを動かす
             playerController.HandleUpdate();
         }
 
-        if(gameState == GameState.Dialog) 
+        // Dialogステートの時は
+        if (gameState == GameState.Dialog)
         {
-            TalkDialogManager.Instance.HandleUpdate();        
+            // TalkDialogManagerを動かす
+            TalkDialogManager.Instance.HandleUpdate();
         }
 
-        if(gameState == GameState.Battle)
+        // Battleステートの時は
+        if (gameState == GameState.Battle)
         {
-            BattleSystem.Instance.HandleUpdate();
+            // BattleSystemをスタートさせる
+            BattleSystem.Instance.HandleStart();
         }
     }
 }

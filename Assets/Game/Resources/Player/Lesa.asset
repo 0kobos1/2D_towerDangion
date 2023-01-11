@@ -9,12 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 708c80c5429acc44e8a9a3cd8d0dfc3f, type: 3}
+  m_Script: {fileID: 11500000, guid: 71b40f55f2c250844bf8194ffb593560, type: 3}
   m_Name: Lesa
   m_EditorClassIdentifier: 
-  name: 
+  name: "\u30EA\u30FC\u30B7\u30E3"
   description: 
-  maxHp: 0
-  hp: 0
-  atk: 0
-  def: 0
+  downSprite1: {fileID: 21300130, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  downSprite2: {fileID: 21300132, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  upSprite1: {fileID: 21300134, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  upSprite2: {fileID: 21300136, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  leftSprite1: {fileID: 21300138, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  leftSprite2: {fileID: 21300140, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  rightSprite1: {fileID: 21300142, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  rightSprite2: {fileID: 21300144, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  maxHp: 100
+  hp: 100
+  atk: 100
+  def: 2

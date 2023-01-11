@@ -9,12 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb33cb84b5139aa42aba01041ce7122a, type: 3}
+  m_Script: {fileID: 11500000, guid: 71b40f55f2c250844bf8194ffb593560, type: 3}
   m_Name: Thief
   m_EditorClassIdentifier: 
-  name: 
+  name: "\u30B7\u30FC\u30D5"
   description: 
-  maxHp: 0
-  hp: 0
-  atk: 0
-  def: 0
+  downSprite1: {fileID: 21300254, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  downSprite2: {fileID: 21300256, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  upSprite1: {fileID: 21300258, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  upSprite2: {fileID: 21300260, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  leftSprite1: {fileID: 21300262, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  leftSprite2: {fileID: 21300264, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  rightSprite1: {fileID: 21300266, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  rightSprite2: {fileID: 21300268, guid: ee4e36e797144564a94a39bbd3b77368, type: 3}
+  maxHp: 100
+  hp: 100
+  atk: 100
+  def: 2
+  exp: 500
+  money: 40

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 修正
-// 敵と接触したタイミングでGameControllerのstateをBattleに変える
+// 〇敵と接触したタイミングでGameControllerのstateをBattleに変える
 
 // プレイヤーの動作制御
 public class PlayerController : MonoBehaviour
@@ -43,8 +43,12 @@ public class PlayerController : MonoBehaviour
                     // touchedEnemyに接触があった敵のゲームオブジェクトを格納
                     GameObject touchedEnemy = TouchedEnemy(input).gameObject;
 
-                    // 戦闘システムを立ち上げると同時に接触したオブジェクトの情報を渡す
-                    BattleSystem.Instance.HandleStart(this.gameObject, touchedEnemy);
+                    // タッチした敵のBattleStatusをBattleSystemに送る
+                    BattleSystem.Instance.GetBattleStatus(this.GetComponent<BattleStatus>(), touchedEnemy.GetComponent<BattleStatus>());
+
+
+                    // GameStateをBattleに設定
+                    GameController.Instance.SetCurrentState(GameState.Battle);
                 }
 
                 // 移動（コルーチン）
@@ -77,6 +81,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // エネミーとの接触を調べる
     Collider2D TouchedEnemy(Vector2 moveVec)
     {
         Vector2 targetPos;

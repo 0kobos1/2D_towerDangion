@@ -16,19 +16,16 @@ public class EnemyController : MonoBehaviour
     
 
     [SerializeField] Dialog dialog;
-    [SerializeField] List<Vector2> movePatten;
 
     Character character;
     Enemystate state;
     
     float idleTimer;
-    int currentMovePattern;
 
     public UnityAction onBattleStart; // バトル開始時に呼び出される
 
     private void Awake()
     {
-        currentMovePattern = 0;
         state = Enemystate.Idle;
         character = GetComponent<Character>();
     }
@@ -106,7 +103,7 @@ public class EnemyController : MonoBehaviour
             GameController.Instance.SetCurrentState(GameState.Battle);
 
             // 自分の情報をBattleSystemにおくる
-            BattleSystem.Instance.GetBattleStatus(touchedPlayer.GetComponent<BattleStatus>(), this.GetComponent<BattleStatus>());
+            BattleSystem.Instance.GetBattleObjects(touchedPlayer, this.gameObject);
 
             // 歩行コルーチンを終了する
             yield break;
@@ -115,8 +112,6 @@ public class EnemyController : MonoBehaviour
         // 歩行する
         yield return character.Move(randomMovePos);
 
-        // 次の移動パターンを設定する
-        currentMovePattern = (currentMovePattern + 1) % movePatten.Count;
 
         // idleTimerを初期化
         idleTimer = 0f;

@@ -5,12 +5,23 @@ using UnityEngine;
 
 
 // 修正
+// 戦闘が開始したらプレイヤーとエネミーの上にHPが表示される
+// 攻撃を受けたらダメージのポップアップが出る
+// 〇プレイヤーが移動しようとした場所が統括リストから削除されない
 // クラス図の作成
-// 敵と自分が重なって表示されるバグをなおす（敵キャラ）
-// NPCのランダム移動（指定した範囲内で）
+// 戦闘が終わってもプレイヤーのHPなどがひきつがれるようにする。
+// ミニマップの作成（左上）
+// 〇敵と自分が重なって表示されるバグをなおす（敵キャラ）
+// 〇NPCのランダム移動（指定した範囲内で）
 // ステータス表示用のUIを考える
 // 戦闘と戦闘の間にインターバルの時間を作る
 // 〇デバッグ用のダイアログを常に表示できるようにする
+// 攻撃アニメーションを作成
+// BGMと効果音を乗せる
+// 攻撃回数のガスガス音を入れる
+// 通常より強い敵（赤い敵を実装）
+// アイテム購入を実装
+
 public enum GameState
 {
     FreeRoam,
@@ -32,8 +43,6 @@ public class GameController : MonoBehaviour
     GameState gameState;
     public GameState GameState { get => gameState; }
     public List<Vector2> MoveTargetList { get; set; } // 全ての移動物の目的地を管理する
-
-
 
     // インスタンス化とgameStateの初期化
     private void Awake()

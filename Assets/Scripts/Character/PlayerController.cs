@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
                     GameObject touchedEnemy = TouchedEnemy(input).gameObject;
 
                     // ƒ^ƒbƒ`‚µ‚½“G‚ÌBattleStatus‚ğBattleSystem‚É‘—‚é
-                    BattleSystem.Instance.GetBattleStatus(this.GetComponent<BattleStatus>(), touchedEnemy.GetComponent<BattleStatus>());
+                    BattleSystem.Instance.GetBattleObjects(this.gameObject, touchedEnemy);
 
 
                     // GameState‚ğBattle‚Éİ’è

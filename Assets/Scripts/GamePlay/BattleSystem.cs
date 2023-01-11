@@ -13,6 +13,9 @@ public class BattleSystem : MonoBehaviour
 {
     [SerializeField] BattleDialogManager battleDialogManager;
 
+    GameObject playerBattleObject; // 戦闘に参加するプレーヤーオブジェクト
+    GameObject enemyBattleObject; // 戦闘に参加するエネミーオブジェクト
+
     BattleStatus playerBattleStatus; // 戦闘開始時に接触したプレイヤーの情報
     PlayerSubStatus playerSubStatus; // 戦闘開始時に接触したプレイヤーのサブ情報（経験値、所持金、所有物など）
     BattleStatus enemyBattleStatus; // 戦闘開始時に接触した敵の情報
@@ -34,10 +37,12 @@ public class BattleSystem : MonoBehaviour
     }
 
     // 戦闘開始時に接触したプレイヤーと敵の情報を取得する
-    public void GetBattleStatus(BattleStatus gotPlayerBattleStatus, BattleStatus gotEnemyBattleStatus)
+    public void GetBattleObjects(GameObject gotPlayerObject, GameObject gotEnemyObject)
     {
-        playerBattleStatus = gotPlayerBattleStatus;
-        enemyBattleStatus = gotEnemyBattleStatus;
+        playerBattleObject = gotPlayerObject;
+        enemyBattleObject = gotEnemyObject;
+        playerBattleStatus = gotPlayerObject.GetComponent<BattleStatus>();
+        enemyBattleStatus = gotEnemyObject.GetComponent<BattleStatus>();
         playerSubStatus = playerBattleStatus.GetComponent<PlayerSubStatus>();
     }
 
@@ -61,7 +66,7 @@ public class BattleSystem : MonoBehaviour
         enemyBattleStatus.SetUp();
         
         // バトルダイアログのセットアップ
-        battleDialogManager.SetUp(playerBattleStatus, enemyBattleStatus);
+        battleDialogManager.SetUp(playerBattleObject, enemyBattleObject);
 
         // 戦闘更新への移行
         HandleUpdate();

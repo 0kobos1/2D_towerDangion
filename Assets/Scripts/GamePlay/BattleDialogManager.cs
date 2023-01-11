@@ -15,6 +15,9 @@ public class BattleDialogManager : MonoBehaviour
     [SerializeField] GameObject playerHpBar;
     [SerializeField] GameObject enemyHpBar;
 
+    GameObject playerBattleObject;
+    GameObject enemyBattleObject;
+
     BattleStatus playerBattleStatus;
     BattleStatus enemyBattleStatus;
 
@@ -22,10 +25,13 @@ public class BattleDialogManager : MonoBehaviour
     Vector2 enemyHpBarScale;
 
     // ダイアログのセットアップ(from BattleSystem)
-    public void SetUp(BattleStatus gotPlayerBattleStatus, BattleStatus gotEnemyBattleStatus)
+    public void SetUp(GameObject gotPlayerBattleObject, GameObject gotEnemyBattleObject)
     {
-        playerBattleStatus = gotPlayerBattleStatus;
-        enemyBattleStatus = gotEnemyBattleStatus;
+        playerBattleObject = gotPlayerBattleObject;
+        enemyBattleObject = gotEnemyBattleObject;
+
+        playerBattleStatus = playerBattleObject.GetComponent<BattleStatus>();
+        enemyBattleStatus = enemyBattleObject.GetComponent<BattleStatus>();
 
         playerHpBarScale = playerHpBar.GetComponent<RectTransform>().localScale;
         enemyHpBarScale = enemyHpBar.GetComponent<RectTransform>().localScale;

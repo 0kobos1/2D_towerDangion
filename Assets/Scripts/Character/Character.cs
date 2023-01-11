@@ -110,7 +110,7 @@ public class Character : MonoBehaviour
         
     }
 
-    // AとBが目的地に移
+    // AとBが目的地に移動
 
     //// character同士が接触すると呼び出される
     //private void OnTriggerEnter2D(Collider2D collision)

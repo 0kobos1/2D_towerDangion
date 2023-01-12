@@ -12,47 +12,51 @@ public class BattleDialogManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI statusHpText;
 
-    GameObject playerBattleObject;
-    GameObject enemyBattleObject;
+    GameObject playerObject;
+    GameObject enemyObject;
     GameObject playerHpBar; // プレイヤー上のHpBar
     GameObject enemyHpBar; // エネミー上のHpBar
 
-    BattleStatus playerBattleStatus;
-    BattleStatus enemyBattleStatus;
+    PlayerStatus playerStatus;
+    EnemyStatus enemyStatus;
 
     Vector2 playerHpBarScale;
     Vector2 enemyHpBarScale;
 
     // ダイアログのセットアップ(from BattleSystem)
-    public void SetUp(GameObject gotPlayerBattleObject, GameObject gotEnemyBattleObject)
+    public void SetUp(GameObject touchedPlayerObject, GameObject touchedEnemyObject)
     {
-        playerBattleObject = gotPlayerBattleObject;
-        enemyBattleObject = gotEnemyBattleObject;
+        // 接触したプレーヤー、敵のオブジェクトを取得
+        playerObject = touchedPlayerObject;
+        enemyObject = touchedEnemyObject;
 
-        playerBattleStatus = playerBattleObject.GetComponent<BattleStatus>();
-        enemyBattleStatus = enemyBattleObject.GetComponent<BattleStatus>();
+        // オブジェクトについているステータスを取得
+        playerStatus = playerObject.GetComponent<PlayerStatus>();
+        enemyStatus = enemyObject.GetComponent<EnemyStatus>();
 
-        playerHpBar = playerBattleObject.transform.Find("HpBarCanvas/PlayerHpBar").gameObject;
-        enemyHpBar = enemyBattleObject.transform.Find("HpBarCanvas/EnemyHpBar").gameObject;
+        // オブジェクトの子であるHpBarオブジェクトを取得
+        playerHpBar = playerObject.transform.Find("HpBarCanvas/PlayerHpBar").gameObject;
+        enemyHpBar = enemyObject.transform.Find("HpBarCanvas/EnemyHpBar").gameObject;
 
+        // HpBarのスケールを取得
         playerHpBarScale = playerHpBar.GetComponent<RectTransform>().localScale;
         enemyHpBarScale = enemyHpBar.GetComponent<RectTransform>().localScale;
 
         // プレイヤーNameText反映
-        playerNameText.text = playerBattleStatus.Status.StatusBase.Name;
+        //playerNameText.text = playerStatus.PlayerStatusBase.Name;
 
         // エネミーNameText反映
-        enemyNameText.text = enemyBattleStatus.Status.StatusBase.Name;
+        //enemyNameText.text = enemyStatus.EnemyStatusBase.Name;
 
         // プレイヤーHpText反映
-        statusHpText.text = $"HP {playerBattleStatus.Hp}/{playerBattleStatus.Status.MaxHp}";
+        statusHpText.text = $"HP {playerStatus.Hp}/{playerStatus.MaxHp}";
 
         // プレイヤーHpBar反映
-        playerHpBarScale.x = (float)playerBattleStatus.Status.Hp / playerBattleStatus.Status.MaxHp;
+        playerHpBarScale.x = (float)playerStatus.Hp / playerStatus.MaxHp;
         playerHpBar.GetComponent<RectTransform>().localScale = playerHpBarScale;
 
         // エネミーHpBar反映
-        enemyHpBarScale.x = (float)enemyBattleStatus.Status.Hp / enemyBattleStatus.Status.MaxHp;
+        enemyHpBarScale.x = (float)enemyStatus.Hp / enemyStatus.MaxHp;
         enemyHpBar.GetComponent<RectTransform>().localScale = enemyHpBarScale;
 
         // 敵と味方のHpバーがダイアログボックスに表示される
@@ -61,17 +65,17 @@ public class BattleDialogManager : MonoBehaviour
     }
 
     // 表示の更新
-    public void HandleUpdate(BattleStatus gotPlayerBattleStatus, BattleStatus gotEnemyBattleStatus)
+    public void HandleUpdate()
     {
         // プレイヤーHpText反映
-        statusHpText.text = $"HP {playerBattleStatus.Hp}/{playerBattleStatus.Status.MaxHp}";
+        statusHpText.text = $"HP {playerStatus.Hp}/{playerStatus.MaxHp}";
 
         // プレイヤーHpBar反映
-        playerHpBarScale.x = (float) playerBattleStatus.Hp / playerBattleStatus.Status.MaxHp;
+        playerHpBarScale.x = (float) playerStatus.Hp / playerStatus.MaxHp;
         playerHpBar.GetComponent<RectTransform>().localScale = playerHpBarScale;
 
         // エネミーHpBar反映
-        enemyHpBarScale.x = (float) enemyBattleStatus.Hp / enemyBattleStatus.Status.MaxHp;
+        enemyHpBarScale.x = (float) enemyStatus.Hp / enemyStatus.MaxHp;
         enemyHpBar.GetComponent<RectTransform>().localScale = enemyHpBarScale;
     }
 

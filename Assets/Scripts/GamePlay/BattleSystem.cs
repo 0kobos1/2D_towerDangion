@@ -11,13 +11,15 @@ public class BattleSystem : MonoBehaviour
 {
     [SerializeField] BattleDialogManager battleDialogManager;
 
-    GameObject playerBattleObject; // 戦闘に参加するプレーヤーオブジェクト
-    GameObject enemyBattleObject; // 戦闘に参加するエネミーオブジェクト
+    GameObject playerObject; // 戦闘に参加するプレーヤーオブジェクト
+    GameObject enemyObject; // 戦闘に参加するエネミーオブジェクト
 
-    BattleStatus playerBattleStatus; // 戦闘開始時に接触したプレイヤーの情報
-    PlayerSubStatus playerSubStatus; // 戦闘開始時に接触したプレイヤーのサブ情報（経験値、所持金、所有物など）
-    BattleStatus enemyBattleStatus; // 戦闘開始時に接触した敵の情報
-    
+    //BattleStatus playerBattleStatus; // 戦闘開始時に接触したプレイヤーの情報
+    //PlayerSubStatus playerSubStatus; // 戦闘開始時に接触したプレイヤーのサブ情報（経験値、所持金、所有物など）
+    //BattleStatus enemyBattleStatus; // 戦闘開始時に接触した敵の情報
+
+    PlayerStatus playerStatus; // 戦闘開始時に接触したプレイヤーの情報
+    EnemyStatus enemyStatus; // 戦闘開始時に接触した敵の情報
 
     public UnityAction OnBattleStart;
     public static BattleSystem Instance { get; private set; }
@@ -35,13 +37,12 @@ public class BattleSystem : MonoBehaviour
     }
 
     // 戦闘開始時に接触したプレイヤーと敵の情報を取得する
-    public void GetBattleObjects(GameObject gotPlayerObject, GameObject gotEnemyObject)
+    public void GetBattleObjects(GameObject touchedPlayerObject, GameObject touchedEnemyObject)
     {
-        playerBattleObject = gotPlayerObject;
-        enemyBattleObject = gotEnemyObject;
-        playerBattleStatus = gotPlayerObject.GetComponent<BattleStatus>();
-        enemyBattleStatus = gotEnemyObject.GetComponent<BattleStatus>();
-        playerSubStatus = playerBattleStatus.GetComponent<PlayerSubStatus>();
+        playerObject = touchedPlayerObject;
+        enemyObject = touchedEnemyObject;
+        playerStatus = touchedPlayerObject.GetComponent<PlayerStatus>();
+        enemyStatus = touchedEnemyObject.GetComponent<EnemyStatus>();
     }
 
     // 戦闘準備（from GameController）
@@ -59,12 +60,13 @@ public class BattleSystem : MonoBehaviour
         // GameControllerの関数が呼び出され、gameStateがBattleになる
         GameController.Instance.SetCurrentState(GameState.Battle);
 
-        // バトルメンバーのセットアップ
-        playerBattleStatus.SetUp();
-        enemyBattleStatus.SetUp();
-        
+        // 敵ステータスのセットアップ    
+        //playerStatus.Setup();
+        Debug.Log(enemyObject.name);
+        enemyStatus.SetUp();
+
         // バトルダイアログのセットアップ
-        battleDialogManager.SetUp(playerBattleObject, enemyBattleObject);
+        battleDialogManager.SetUp(playerObject, enemyObject);
 
         // 戦闘更新への移行
         HandleUpdate();
@@ -88,22 +90,22 @@ public class BattleSystem : MonoBehaviour
             yield return new WaitForSeconds(battleSpeed);
 
             // 自分から敵への攻撃
-            enemyBattleStatus.TakeDamage(playerBattleStatus, enemyBattleStatus);
+            enemyStatus.TakeDamage(playerStatus, enemyStatus);
             Debug.Log("プレイヤーから敵への攻撃");
 
             // バトルダイアログのアップデート
-            battleDialogManager.HandleUpdate(playerBattleStatus, enemyBattleStatus);
+            battleDialogManager.HandleUpdate();
 
             // 敵のダメージが0以下であれば
-            if (enemyBattleStatus.Hp <= 0)
+            if (enemyStatus.Hp <= 0)
             {
                 Debug.Log("敵はプレイヤーに倒された");
 
                 // 敵の経験値、お金、アイテムをPlayerSubStatusに渡す
-                playerSubStatus.GetExpMoneyItems(enemyBattleStatus);
+                playerStatus.GetExpMoneyItems(enemyStatus);
 
                 // 敵のオブジェクトを非表示にする
-                enemyBattleStatus.gameObject.SetActive(false);
+                enemyObject.SetActive(false);
 
                 // BattleDialogを閉じる
                 battleDialogManager.Close();
@@ -123,14 +125,14 @@ public class BattleSystem : MonoBehaviour
             // 敵のHPが残っていれば
 
             // 敵から自分への攻撃
-            playerBattleStatus.TakeDamage(enemyBattleStatus, playerBattleStatus);
+            playerStatus.TakeDamage(enemyStatus, playerStatus);
             Debug.Log("敵からプレイヤーへの攻撃");
 
             // バトルダイアログのアップデート
-            battleDialogManager.HandleUpdate(playerBattleStatus, enemyBattleStatus);
+            battleDialogManager.HandleUpdate();
 
             // 自分のHPが0以下であれば
-            if (playerBattleStatus.Hp <= 0)
+            if (playerStatus.Hp <= 0)
             {
                 // ゲームオーバーの処理
                 GameOver();

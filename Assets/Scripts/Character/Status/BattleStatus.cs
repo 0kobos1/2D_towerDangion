@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 修正
-// ステージの難易度をGameControllerから取得
+// 〇ステージの難易度をGameControllerから取得
 
 // 戦闘中のステータス変化(HPの変化も含む）を管理
 public class BattleStatus : MonoBehaviour
 { 
-    [SerializeField] StatusBase StatusBase; // ベースステータス
+    [SerializeField] StatusBase statusBase; // ベースステータス
     [SerializeField] bool isPlayer = false; // プレイヤーかどうかを判定する
     // [SerializeField] int level; // レベル
 
@@ -17,6 +17,7 @@ public class BattleStatus : MonoBehaviour
     public Status Status { get; set; }
     public int Hp { get; set; }
     public int Level { get; set; } // レベル 
+    public StatusBase StatusBase { get => statusBase;}
 
     public void Awake()
     {
@@ -33,9 +34,11 @@ public class BattleStatus : MonoBehaviour
         // プレイヤーならば
         if (isPlayer)
         {
-            // レベルをPlayerSubStatusから設定（経験値取得によるレベルアップが反映される）
+            // レベル、現在HpをPlayerSubStatusから設定（経験値取得によるレベルアップが反映される）
             Level = playerSubStatus.Level;
+            Hp = playerSubStatus.Hp;
             DebugTextManager.Instance.text1 = "PlayerLevel: " + Level.ToString();
+
         }
 
         // 敵ならば
@@ -49,10 +52,14 @@ public class BattleStatus : MonoBehaviour
             
             // ステージの難易度に合わせてレベルを変える
             Level = (int) (stageDifficulty * modifier);
+
+            
         }
 
-        
-        Status = new Status(StatusBase, Level);
+        // ステータスを生成
+        Status = new Status(statusBase, Level);
+
+        // Hpを最大値で取得する
         Hp = Status.Hp;
     }
 

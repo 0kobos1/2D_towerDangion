@@ -6,9 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 // 修正
-// 敵から経験値とお金を入手できるようにする
-// レベルアップできるようにする
-// 戦闘コルーチンのwaitForTimeSecondを戦闘速度という形でオプション設定できるようにする
+
 public class BattleSystem : MonoBehaviour
 {
     [SerializeField] BattleDialogManager battleDialogManager;

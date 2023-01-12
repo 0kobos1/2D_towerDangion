@@ -10,9 +10,14 @@ using UnityEngine;
 // 所有経験値、所持金、持ち物などの管理
 public class PlayerSubStatus : MonoBehaviour
 {
+    
     public int Level { get; private set; } // レベルアップ分のストック
+    public int Hp { get; private set; } // 現在のHP
     public int Exp { get; private set; }
     public int Money { get; private set; }
+
+    Status playerStatus; // プレーヤーのステータス（レベルアップを反映）
+    StatusBase playerStatusBase; // プレーヤーのステータスのベース
 
     // List<ScriptableObject> で持ち物を管理
 

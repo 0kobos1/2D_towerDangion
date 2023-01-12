@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-
 // 修正
 // playerの現在のステータスを保存できるスクリプトを作成し、BattleSystemでそちらからデータを取得するようにする。
 // 戦闘が開始したらプレイヤーとエネミーの上にHPが表示される

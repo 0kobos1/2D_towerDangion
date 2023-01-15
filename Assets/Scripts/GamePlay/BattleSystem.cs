@@ -14,9 +14,6 @@ public class BattleSystem : MonoBehaviour
     GameObject playerObject; // 戦闘に参加するプレーヤーオブジェクト
     GameObject enemyObject; // 戦闘に参加するエネミーオブジェクト
 
-    //BattleStatus playerBattleStatus; // 戦闘開始時に接触したプレイヤーの情報
-    //PlayerSubStatus playerSubStatus; // 戦闘開始時に接触したプレイヤーのサブ情報（経験値、所持金、所有物など）
-    //BattleStatus enemyBattleStatus; // 戦闘開始時に接触した敵の情報
 
     PlayerStatus playerStatus; // 戦闘開始時に接触したプレイヤーの情報
     EnemyStatus enemyStatus; // 戦闘開始時に接触した敵の情報
@@ -94,6 +91,7 @@ public class BattleSystem : MonoBehaviour
             Debug.Log("プレイヤーから敵への攻撃");
 
             // バトルダイアログのアップデート
+            StatusDialogManager.Instance.DialogUpdate();
             battleDialogManager.HandleUpdate();
 
             // 敵のダメージが0以下であれば
@@ -103,6 +101,9 @@ public class BattleSystem : MonoBehaviour
 
                 // 敵の経験値、お金、アイテムをPlayerSubStatusに渡す
                 playerStatus.GetExpMoneyItems(enemyStatus);
+
+                // プレーヤーのステータス変化をダイアログに反映する
+                StatusDialogManager.Instance.DialogUpdate();
 
                 // 敵のオブジェクトを非表示にする
                 enemyObject.SetActive(false);
@@ -128,7 +129,7 @@ public class BattleSystem : MonoBehaviour
             playerStatus.TakeDamage(enemyStatus, playerStatus);
             Debug.Log("敵からプレイヤーへの攻撃");
 
-            // バトルダイアログのアップデート
+            //// バトルダイアログのアップデート
             battleDialogManager.HandleUpdate();
 
             // 自分のHPが0以下であれば

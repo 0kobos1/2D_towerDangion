@@ -30,6 +30,18 @@ public class NPCController : MonoBehaviour, IInteractable
 
     private void Update()
     {
+        // Battleステート時はUpdateしない(全NPCが止まる）
+        if (GameController.Instance.GameState == GameState.Battle)
+        {
+            return;
+        }
+
+        // Menuステート時はUpdateしない(全NPCが止まる）
+        if (GameController.Instance.GameState == GameState.Menu)
+        {
+            return;
+        }
+
         character.HandleUpdate();
 
         // 2秒間隔でステートを"Walk"に変更する
@@ -127,7 +139,7 @@ public class NPCController : MonoBehaviour, IInteractable
             character.LookTowards(initiator);
 
             // NPCの持つダイアログを表示させる
-            StartCoroutine(TalkDialogManager.Instance.ShowDialog(dialog, OnDialogFinished));
+            StartCoroutine(MessageDialogManager.Instance.ShowDialog(dialog, OnDialogFinished));
         }
     }
 

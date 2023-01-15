@@ -30,6 +30,9 @@ public class StatusBase : ScriptableObject
     [SerializeField] int exp; // 経験値
     [SerializeField] int money; // お金 
 
+    [SerializeField] List<WeaponBase> weaponBases; // 所持武器
+    [SerializeField] List<HealingItemBase> healingItemBases; // 所持回復アイテム
+
     public string Name { get => name; }
     public int MaxHp { get => maxHp; }
     public int Hp { get => hp; }
@@ -38,4 +41,6 @@ public class StatusBase : ScriptableObject
 
     public int Exp { get => exp; }
     public int Money { get => money; }
+    public List<WeaponBase> WeaponBases { get => weaponBases; }
+    public List<HealingItemBase> HealingItemBases { get => healingItemBases; }
 }

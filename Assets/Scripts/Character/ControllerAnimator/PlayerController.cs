@@ -22,9 +22,22 @@ public class PlayerController : MonoBehaviour
     // キーボード入力を受け付けて、位置を変える
     public void HandleUpdate()
     {
-        // 移動中でなければキーボード入力を受け付ける
+        // 移動中でなければ、
+        // Vボタンを押したときにメニュー画面を開く
+        if(!character.IsMoving)
+        {
+            if(Input.GetKeyDown(KeyCode.V)) 
+            {
+                Debug.Log("メニューを開いた！");
+                GameController.Instance.SetCurrentState(GameState.Menu);
+                
+            }
+        }
+
+        // 移動中でなければ、
         if (!character.IsMoving)
         {
+            // 移動入力を受け付ける
             input.x = Input.GetAxisRaw("Horizontal");
             input.y = Input.GetAxisRaw("Vertical");
 

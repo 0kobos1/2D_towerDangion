@@ -28,3 +28,13 @@ MonoBehaviour:
   def: 2
   exp: 500
   money: 40
+  weaponBases:
+  - {fileID: 11400000, guid: 2f8fbb03734f9e44d866d13572b71e2e, type: 2}
+  - {fileID: 11400000, guid: 635606f0647c9b84dbe9236b27482581, type: 2}
+  - {fileID: 11400000, guid: 636418de209bd7242bb83743df80e2e1, type: 2}
+  healingItemBases:
+  - {fileID: 11400000, guid: 0bf19c038b6c9ed49936267a7743b0cb, type: 2}
+  - {fileID: 11400000, guid: 4a4254c35dc926e48932e912839c4e28, type: 2}
+  - {fileID: 11400000, guid: 5bc11447eb75bc647b3c380f5e04fa17, type: 2}
+  - {fileID: 11400000, guid: 4a4254c35dc926e48932e912839c4e28, type: 2}
+  - {fileID: 11400000, guid: 0bf19c038b6c9ed49936267a7743b0cb, type: 2}

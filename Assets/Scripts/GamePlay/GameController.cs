@@ -3,39 +3,41 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-// 修正
-// playerの現在のステータスを保存できるスクリプトを作成し、BattleSystemでそちらからデータを取得するようにする。
-// 戦闘が開始したらプレイヤーとエネミーの上にHPが表示される
+// <修正>
+// 装備画面を設定
+// アイテムの実装
+// メニューUIを作成する
+// Sボタンを押すと同時にメニューウインドウが出るようにする
+// 回復アイテムの実装
+// 〇スクリプタブルオブジェクトで武器を作成
+// 敵からとった武器を装備できるようにするF
+// 敵のレベルに応じて、良いアイテムがもらえるようにする
 // 攻撃を受けたらダメージのポップアップが出る
-// 〇プレイヤーが移動しようとした場所が統括リストから削除されない
-// クラス図の作成
 // 戦闘が終わってもプレイヤーのHPなどがひきつがれるようにする。
 // ミニマップの作成（左上）
-// 〇敵と自分が重なって表示されるバグをなおす（敵キャラ）
-// 〇NPCのランダム移動（指定した範囲内で）
+// NPCのランダム移動（指定した範囲内で）
 // ステータス表示用のUIを考える
+// メニュー画面の実装
 // 戦闘と戦闘の間にインターバルの時間を作る
-// 〇デバッグ用のダイアログを常に表示できるようにする
 // 攻撃アニメーションを作成
 // BGMと効果音を乗せる
 // 攻撃回数のガスガス音を入れる
 // 通常より強い敵（赤い敵を実装）
 // アイテム購入を実装
-// 〇敵から経験値とお金を入手できるようにする
-// 〇レベルアップできるようにする
-// 〇戦闘コルーチンのwaitForTimeSecondを戦闘速度という形でオプション設定できるようにする
 
 public enum GameState
 {
     FreeRoam,
     Dialog,
     Battle,
+    Menu,
 }
 
 // ゲームの遷移状態
 public class GameController : MonoBehaviour
 {
     [SerializeField] PlayerController playerController;
+    [SerializeField] MenuDialogManager menuDialogManager;
     [SerializeField] int stageDifficulty; // ステージ難易度:敵のLevel設定に使用
     [SerializeField] float battleSpeed; // 戦闘速度:戦闘コルーチンのWait時間に使用
 
@@ -73,8 +75,8 @@ public class GameController : MonoBehaviour
         // Dialogステートの時は
         if (gameState == GameState.Dialog)
         {
-            // TalkDialogManagerを動かす
-            TalkDialogManager.Instance.HandleUpdate();
+            // MessageDialogManagerを動かす
+            MessageDialogManager.Instance.HandleUpdate();
         }
 
         // Battleステートの時は
@@ -82,6 +84,13 @@ public class GameController : MonoBehaviour
         {
             // BattleSystemをスタートさせる
             BattleSystem.Instance.HandleStart();
+        }
+
+        // Menuステートの時は
+        if(gameState == GameState.Menu)
+        {
+            // Menuステートを動かす
+            menuDialogManager.SetUp();
         }
     }
 }

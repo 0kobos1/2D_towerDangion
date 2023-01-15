@@ -38,6 +38,12 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
+        // Menuステート時はUpdateしない(全Enemyが止まる）
+        if (GameController.Instance.GameState == GameState.Menu)
+        {
+            return;
+        }
+
         character.HandleUpdate();
 
         // ランダムな時間間隔を取得する

@@ -24,4 +24,7 @@ public class Status
 
     public int Exp { get { return Mathf.FloorToInt((StatusBase.Exp * Level) / 100f) + 5; } }
     public int Money { get { return Mathf.FloorToInt((StatusBase.Money * Level) / 100f) + 5; } }
+
+    public List<WeaponBase> Weapons { get { return StatusBase.WeaponBases; } }
+    public List<HealingItemBase> HealingItems { get { return StatusBase.HealingItemBases; } }
 }

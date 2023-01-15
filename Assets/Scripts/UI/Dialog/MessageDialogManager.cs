@@ -6,16 +6,16 @@ using UnityEngine.Events;
 
 
 // 会話を表示する
-public class TalkDialogManager : MonoBehaviour
+public class MessageDialogManager : MonoBehaviour
 {
-    [SerializeField] GameObject talkDialogBox;
-    [SerializeField] TextMeshProUGUI talkDialogText;
+    [SerializeField] GameObject messageDialogBox;
+    [SerializeField] TextMeshProUGUI messageDialogText;
     [SerializeField] float letterPerSecond;
 
     public UnityAction OnCloseDialog;
     public UnityAction OnDialogFinished;
 
-    public static TalkDialogManager Instance { get; private set; }
+    public static MessageDialogManager Instance { get; private set; }
 
     private void Awake()
     {
@@ -46,7 +46,7 @@ public class TalkDialogManager : MonoBehaviour
         IsShowing = true;
 
         // DialogBoxを表示
-        talkDialogBox.SetActive(true);
+        messageDialogBox.SetActive(true);
 
         // ダイアログをタイプ表示する
         StartCoroutine(TypeDialog(dialog.Lines[currentLine]));
@@ -75,7 +75,7 @@ public class TalkDialogManager : MonoBehaviour
                 OnDialogFinished?.Invoke();
 
                 // ダイアログ非表示
-                talkDialogBox.SetActive(false);
+                messageDialogBox.SetActive(false);
 
                 // 現在のダイアログ表示ラインを0に戻す
                 currentLine = 0;
@@ -91,19 +91,19 @@ public class TalkDialogManager : MonoBehaviour
     }
 
     // タイプ形式で文字を表示
-    IEnumerator TypeDialog(string line)
+    public IEnumerator TypeDialog(string line)
     {
         // タイピング中
         isTyping = true;
 
         // 最初は空白からはじめる
-        talkDialogText.text = "";
+        messageDialogText.text = "";
 
         // 文に含まれる文字を
         foreach(char letter in line.ToCharArray())
         {
             // 一文字ずつ表示させる
-            talkDialogText.text += letter;
+            messageDialogText.text += letter;
 
             // 表示時間間隔分待機する
             yield return new WaitForSeconds(1f/letterPerSecond);
